@@ -37,6 +37,7 @@
 #include "ff.h"
 #include "ff_gen_drv.h"
 #include "sd_diskio.h" /* defines SD_Driver as external */
+#include "string.h"
 
 /* Private variables ---------------------------------------------------------*/
 IWDG_HandleTypeDef hiwdg;
@@ -116,6 +117,11 @@ unsigned char ft800memRead8(unsigned long);
 unsigned int ft800memRead16(unsigned long);
 unsigned long ft800memRead32(unsigned long);
 unsigned int incCMDOffset(unsigned int, unsigned char);
+void drawGauge(uint16_t x, uint16_t y, uint16_t r, uint16_t flat, uint16_t large, uint16_t small, uint16_t pointer, uint16_t max_pointer);
+void drawText(int16_t x, int16_t y, int16_t font, uint16_t option, const char* text);
+
+uint16_t speed = 0;
+uint16_t revs = 900;
 
 /* USER CODE END 0 */
 
@@ -302,11 +308,6 @@ if (ft800memRead8(REG_ID) != 0x7C)											// Read ID register - is it 0x7C?
 		}while (cmdBufferWr != cmdBufferRd);									// Wait until the two registers match
   
 		cmdOffset = cmdBufferWr;															// The new starting point the first location after the last command
-
-		if (color != WHITE)																		// If a red dot was just drawn (or first time through)...
-			color = WHITE;																			// change color to white
-		else																									// Otherwise...
-			color = RED;																				// change the color to red
     
 		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_DLSTART));// Start the display list
 		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
@@ -321,31 +322,10 @@ if (ft800memRead8(REG_ID) != 0x7C)											// Read ID register - is it 0x7C?
 																												// Attributes are the color, stencil and tag buffers
 		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
 
-
-		ft800memWrite32(RAM_CMD + cmdOffset, (DL_COLOR_RGB | color));
-																												// Set the color of the following item(s) - toggle red/white from above
-		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
-
-
-		ft800memWrite32(RAM_CMD + cmdOffset, (DL_POINT_SIZE | point_size));
-																												// Select the size of the dot to draw
-		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
-
-
-		ft800memWrite32(RAM_CMD + cmdOffset, (DL_BEGIN | FTPOINTS));
-																												// Indicate to draw a point (dot)
-		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
-
-
-		ft800memWrite32(RAM_CMD + cmdOffset, (DL_VERTEX2F | (point_x << 15) | point_y));
-																												// Set the point center location
-		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
-
-
-		ft800memWrite32(RAM_CMD + cmdOffset, (DL_END));				// End the point
-		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
-
-
+		drawGauge(114, 142, 60, OPT_FLAT, 10, 2, speed, 250);
+		drawGauge(357, 142, 60, OPT_FLAT, 8, 2, revs, 7000);
+		drawText(240, 22, 28, OPT_CENTER, "IBUSMONITOR");
+		
 		ft800memWrite32(RAM_CMD + cmdOffset, (DL_DISPLAY));		// Instruct the graphics processor to show the list
 		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
 	
@@ -355,8 +335,17 @@ if (ft800memRead8(REG_ID) != 0x7C)											// Read ID register - is it 0x7C?
 
 
 		ft800memWrite16(REG_CMD_WRITE, (cmdOffset));					// Update the ring buffer pointer so the graphics processor starts executing
+		
+		revs += 100;
+		HAL_Delay(50);	
+		if(speed < 250) {
+			speed++;
+			revs -= 100;
+		}
+		else
+			speed = 0;
 
-		HAL_Delay(500);																				// Wait a half-second to observe the changing color
+// Wait a half-second to observe the changing color
 
  // End of loop()
 
@@ -820,6 +809,66 @@ unsigned int incCMDOffset(unsigned int currentOffset, unsigned char commandSize)
     }
     return newOffset;																		// Return new offset
 }
+
+void drawGauge(uint16_t x, uint16_t y, uint16_t r, uint16_t flat, uint16_t large, uint16_t small, uint16_t pointer, uint16_t max_pointer) {
+		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_GAUGE));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (x));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (y));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (r));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (flat));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (large));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (small));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (pointer));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (max_pointer));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+}
+
+void drawText(int16_t x, int16_t y, int16_t font, uint16_t option, const char* text) {
+		
+		int i;	
+	
+		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_TEXT));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, (x));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, (y));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, (font));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, (option));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		for( i=0; i <= strlen(text); i++) {
+				ft800memWrite16(RAM_CMD + cmdOffset, text[i]);		// Instruct the graphics processor to show the list
+				cmdOffset = incCMDOffset(cmdOffset, sizeof(text[i]));						// Update the command pointer
+		}
+		
+		//ft800memWrite16(RAM_CMD + cmdOffset, NULL);		// Instruct the graphics processor to show the list
+		//cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+
+		
+}
+
 
 /* USER CODE END 4 */
 

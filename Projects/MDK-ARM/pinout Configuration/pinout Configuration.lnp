@@ -4,6 +4,7 @@
 "pinout configuration\main.o"
 "pinout configuration\stm32f4xx_hal_msp.o"
 "pinout configuration\stm32f4xx_it.o"
+"pinout configuration\ft800.o"
 "pinout configuration\system_stm32f4xx.o"
 "pinout configuration\stm32f4xx_hal.o"
 "pinout configuration\stm32f4xx_hal_cortex.o"
