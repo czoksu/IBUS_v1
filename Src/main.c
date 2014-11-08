@@ -116,6 +116,17 @@ unsigned char ft800memRead8(unsigned long);
 unsigned int ft800memRead16(unsigned long);
 unsigned long ft800memRead32(unsigned long);
 unsigned int incCMDOffset(unsigned int, unsigned char);
+void cmd_button(int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char* s );
+void cmd_fgcolor(uint32_t c);
+void cmd_bgcolor(uint32_t c);
+void cmd_keys( int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char* s );
+void cmd_slider( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t options, uint16_t val, uint16_t range );
+void cmd_toggle( int16_t x, int16_t y, int16_t w, int16_t font, uint16_t options, uint16_t state, const char* s );
+void cmd_number( int16_t x, int16_t y, int16_t font, uint16_t options, int32_t n );
+void cmd_calibrate( uint32_t result );
+void cmd_track( int16_t x, int16_t y, int16_t w, int16_t h, int16_t tag );
+
+
 
 /* USER CODE END 0 */
 
@@ -820,6 +831,219 @@ unsigned int incCMDOffset(unsigned int currentOffset, unsigned char commandSize)
     }
     return newOffset;																		// Return new offset
 }
+
+void cmd_button(int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char* s ) {
+  
+  		int i;
+  
+		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_BUTTON));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (x));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (y));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (w));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (h));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (font));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);	
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (options));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);	
+		
+		for(i=0; i<strlen(s); i++) {
+		  
+			ft800memWrite8(RAM_CMD + cmdOffset, (s[i]));																												// Select the size of the dot to draw
+			cmdOffset = incCMDOffset(cmdOffset, sizeof(s[i]));	 
+		
+		}
+}
+
+
+void cmd_fgcolor(uint32_t c) {
+ 
+		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_FGCOLOR));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (c));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer  
+  
+}
+
+void cmd_bgcolor(uint32_t c) {
+ 
+		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_BGCOLOR));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (c));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer  
+  
+}
+
+void cmd_keys( int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char* s ) {
+  
+  		int i;
+  
+		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_KEYS));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (x));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (y));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (w));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (h));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (font));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);	
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (options));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);	
+		
+		for(i=0; i<strlen(s); i++) {
+		  
+			ft800memWrite8(RAM_CMD + cmdOffset, (s[i]));																												// Select the size of the dot to draw
+			cmdOffset = incCMDOffset(cmdOffset, sizeof(s[i]));	 
+		
+		}		
+  
+}
+
+
+void cmd_slider( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t options, uint16_t val, uint16_t range ) {
+  
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_SLIDER));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (x));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (y));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (w));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (h));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (options));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);	
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (val));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);	
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (range));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);	
+  
+}
+
+
+void cmd_toggle( int16_t x, int16_t y, int16_t w, int16_t font, uint16_t options, uint16_t state, const char* s ) {
+  
+		int i;
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_TOGGLE));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (x));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (y));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (w));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (font));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+
+		ft800memWrite32(RAM_CMD + cmdOffset, (options));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);	
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (state));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);	
+
+		for(i=0; i<strlen(s); i++) {
+		  
+			ft800memWrite8(RAM_CMD + cmdOffset, (s[i]));																												// Select the size of the dot to draw
+			cmdOffset = incCMDOffset(cmdOffset, sizeof(s[i]));	 
+		
+		}	
+
+  
+  
+}
+
+void cmd_number( int16_t x, int16_t y, int16_t font, uint16_t options, int32_t n ) {
+  
+  
+		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_NUMBER));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+
+		ft800memWrite16(RAM_CMD + cmdOffset, (x));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, (y));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, (font));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, (options));																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+   
+		ft800memWrite32(RAM_CMD +cmdOffset, n)
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+		
+}
+
+
+void cmd_calibrate( uint32_t result ) {
+  
+		ft800memWrite32(RAM_CMD +cmdOffset, CMD_CALIBRATE)
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+  
+}
+
+void cmd_track( int16_t x, int16_t y, int16_t w, int16_t h, int16_t tag ) {
+  
+		ft800memWrite32(RAM_CMD + cmdOffset, CMD_TRACK);																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+
+		ft800memWrite16(RAM_CMD + cmdOffset, x);																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, y);																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, w);																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, h);																												// Select the size of the dot to draw
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+   
+		ft800memWrite16(RAM_CMD +cmdOffset, tag)
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+    
+}
+
+
+
+
+
 
 /* USER CODE END 4 */
 
