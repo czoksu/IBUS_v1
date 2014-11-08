@@ -7,7 +7,7 @@ pinout configuration\bsp_driver_sd.o: ..\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm
 pinout configuration\bsp_driver_sd.o: ..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 pinout configuration\bsp_driver_sd.o: ..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f429xx.h
 pinout configuration\bsp_driver_sd.o: ..\..\Drivers\CMSIS\Include\core_cm4.h
-pinout configuration\bsp_driver_sd.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdint.h
+pinout configuration\bsp_driver_sd.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 pinout configuration\bsp_driver_sd.o: ..\..\Drivers\CMSIS\Include\core_cmInstr.h
 pinout configuration\bsp_driver_sd.o: ..\..\Drivers\CMSIS\Include\core_cmFunc.h
 pinout configuration\bsp_driver_sd.o: ..\..\Drivers\CMSIS\Include\core_cm4_simd.h

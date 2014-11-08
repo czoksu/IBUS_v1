@@ -1005,7 +1005,7 @@ void cmd_number( int16_t x, int16_t y, int16_t font, uint16_t options, int32_t n
 		ft800memWrite16(RAM_CMD + cmdOffset, (options));																												// Select the size of the dot to draw
 		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
    
-		ft800memWrite32(RAM_CMD +cmdOffset, n)
+		ft800memWrite32(RAM_CMD +cmdOffset, n);
 		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
 		
 }
@@ -1013,7 +1013,7 @@ void cmd_number( int16_t x, int16_t y, int16_t font, uint16_t options, int32_t n
 
 void cmd_calibrate( uint32_t result ) {
   
-		ft800memWrite32(RAM_CMD +cmdOffset, CMD_CALIBRATE)
+		ft800memWrite32(RAM_CMD +cmdOffset, CMD_CALIBRATE);
 		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
   
 }
@@ -1035,7 +1035,7 @@ void cmd_track( int16_t x, int16_t y, int16_t w, int16_t h, int16_t tag ) {
 		ft800memWrite16(RAM_CMD + cmdOffset, h);																												// Select the size of the dot to draw
 		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
    
-		ft800memWrite16(RAM_CMD +cmdOffset, tag)
+		ft800memWrite16(RAM_CMD +cmdOffset, tag);
 		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
     
 }

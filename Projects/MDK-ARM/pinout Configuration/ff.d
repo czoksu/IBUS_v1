@@ -9,7 +9,7 @@ pinout configuration\ff.o: ..\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_
 pinout configuration\ff.o: ..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 pinout configuration\ff.o: ..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f429xx.h
 pinout configuration\ff.o: ..\..\Drivers\CMSIS\Include\core_cm4.h
-pinout configuration\ff.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdint.h
+pinout configuration\ff.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 pinout configuration\ff.o: ..\..\Drivers\CMSIS\Include\core_cmInstr.h
 pinout configuration\ff.o: ..\..\Drivers\CMSIS\Include\core_cmFunc.h
 pinout configuration\ff.o: ..\..\Drivers\CMSIS\Include\core_cm4_simd.h
@@ -35,4 +35,4 @@ pinout configuration\ff.o: ..\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_
 pinout configuration\ff.o: ..\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h
 pinout configuration\ff.o: ..\..\Inc\bsp_driver_sd.h
 pinout configuration\ff.o: ..\..\Middlewares\Third_Party\FatFs\src\diskio.h
-pinout configuration\ff.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdarg.h
+pinout configuration\ff.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
