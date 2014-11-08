@@ -436,6 +436,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\Src\stm32f4xx_it.c</FilePath>
             </File>
+            <File>
+              <FileName>FT800.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FT800.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
