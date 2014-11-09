@@ -2,69 +2,32 @@
 <body>
 <pre>
 <h1>µVision Build Log</h1>
-<h2>Tool Versions:</h2>
-IDE-Version: µVision V5.12.0.0
-Copyright (C) 2014 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: Dawid Manikowski, none, LIC=S5IBS-LKX8N-JLCCC-7B8BY-6NJ0R-9EAXG
- 
-Tool Versions:
-Toolchain:       MDK-ARM Professional  Version: 5.12.0.0
-Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
-C Compiler:      Armcc.exe V5.05 (build 41)
-Assembler:       Armasm.exe V5.05 (build 41)
-Linker/Locator:  ArmLink.exe V5.05 (build 41)
-Library Manager: ArmAr.exe V5.05 (build 41)
-Hex Converter:   FromElf.exe V5.05 (build 41)
-CPU DLL:         SARMCM3.DLL V5.12.0.0
-Dialog DLL:      DCM.DLL V1.13.0.0
-Target DLL:      UL2CM3.DLL V1.153.0.0
-Dialog DLL:      TCM.DLL V1.14.2.0
- 
 <h2>Project:</h2>
-E:\IBUS_v1\IBUS_v1\Projects\MDK-ARM\pinout.uvprojx
-Project File Date:  11/09/2014
+C:\Users\Czoks\Desktop\IBUS_v1\Projects\MDK-ARM\pinout.uvprojx
+Project File Date:  11/10/2014
 
 <h2>Output:</h2>
 Build target 'pinout Configuration'
-compiling main.c...
+compiling stm32f4xx_it.c...
 linking...
-Program Size: Code=13048 RO-data=476 RW-data=128 ZI-data=1432  
+Program Size: Code=13640 RO-data=500 RW-data=144 ZI-data=1456  
 FromELF: creating hex file...
 "pinout Configuration\pinout Configuration.axf" - 0 Error(s), 0 Warning(s).
-
-<h2>Collection of Component include folders:</h2>
-  E:\IBUS_v1\IBUS_v1\Projects\MDK-ARM\RTE
-  C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.2.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
-
-<h2>Collection of Component Files used:</h2>
+Load "pinout Configuration\\pinout Configuration.axf" 
+Erase Done.
+Programming Done.
+Verify OK.
+Application running ...
 </pre>
 </body>
 </html>
-ice\ST\STM32F4xx\Include
-
-<h2>Collection of Component Files used:</h2>
-Target not created.
-6_t Size)
-..\..\Src\main.c(1093): error:  #254: type name is not allowed
-        HAL_UART_Receive_IT(&huart1, uint8_t *pData, uint16_t Size)
-..\..\Src\main.c(1093): error:  #18: expected a ")"
-        HAL_UART_Receive_IT(&huart1, uint8_t *pData, uint16_t Size)
-..\..\Src\main.c(1095): error:  #65: expected a ";"
-    HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
-..\..\Src\main.c: 2 warnings, 5 errors
-compiling stm32f4xx_hal_msp.c...
-compiling stm32f4xx_it.c...
-compiling system_stm32f4xx.c...
-compiling stm32f4xx_hal.c...
-compiling stm32f4xx_hal_cortex.c...
-compiling stm32f4xx_hal_dma.c...
-compiling stm32f4xx_hal_dma_ex.c...
-compiling stm32f4xx_hal_flash.c...
-compiling stm32f4xx_hal_flash_ex.c...
-compiling stm32f4xx_hal_flash_ramfunc.c...
-compiling stm32f4xx_hal_gpio.c...
-compiling stm32f4xx_hal_iwdg.c...
-compiling stm32f4xx_hal_pwr.c...
+D, 1, 10);
+..\..\Src\main.c: 0 warnings, 2 errors
+"pinout Configuration\pinout Configuration.axf" - 2 Error(s), 0 Warning(s).
+Target not created
+ Error(s), 0 Warning(s).
+Target not created
+.c...
 compiling stm32f4xx_hal_pwr_ex.c...
 compiling stm32f4xx_hal_rcc.c...
 compiling stm32f4xx_hal_rcc_ex.c...
@@ -80,11 +43,7 @@ compiling ff.c...
 compiling ff_gen_drv.c...
 compiling ccsbcs.c...
 compiling syscall.c...
-"pinout Configuration\pinout Configuration.axf" - 5 Error(s), 2 Warning(s).
-
-<h2>Collection of Component include folders:</h2>
-  E:\IBUS_v1\IBUS_v1\Projects\MDK-ARM\RTE
-  C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.2.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
-
-<h2>Collection of Component Files used:</h2>
-Target not created.
+linking...
+Program Size: Code=13128 RO-data=476 RW-data=132 ZI-data=1460  
+FromELF: creating hex file...
+"pinout Configuration\pinout Configuration.axf" - 0 Error(s), 0 Warning(s).

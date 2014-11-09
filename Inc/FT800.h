@@ -23,7 +23,8 @@
  **************************************************************************
 
 */
-#include "stdint.h"
+
+#include "stm32f4xx_hal.h"
 #include "string.h"
 
 #ifndef FT800_h
@@ -318,12 +319,41 @@
 #define INVALID_TOUCH_XY      0x8000
 #define ABS(x)                ((x) > (0) ? (x) : (-x))
 
-
+// FT800 pin definitions
+#define FT800_PD_N	GPIO_PIN_0
+#define FT800_CS_N	GPIO_PIN_1
 
 /*****************************************************************************/
 /************************* F U N C T I O N S *********************************/
 /*****************************************************************************/
+void ft800cmdWrite(unsigned char);
+void ft800memWrite8(unsigned long, unsigned char);
+void ft800memWrite16(unsigned long, unsigned int);
+void ft800memWrite32(unsigned long, unsigned long);
+unsigned char ft800memRead8(unsigned long);
+unsigned int ft800memRead16(unsigned long);
+unsigned long ft800memRead32(unsigned long);
+unsigned int incCMDOffset(unsigned int, unsigned char);
+void cmd_button(int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char* s );
+void cmd_fgcolor(uint32_t c);
+void cmd_bgcolor(uint32_t c);
+void cmd_keys( int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char* s );
+void cmd_slider( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t options, uint16_t val, uint16_t range );
+void cmd_toggle( int16_t x, int16_t y, int16_t w, int16_t font, uint16_t options, uint16_t state, const char* s );
+void cmd_number( int16_t x, int16_t y, int16_t font, uint16_t options, int32_t n );
+void cmd_calibrate( uint32_t result );
+void cmd_track( int16_t x, int16_t y, int16_t w, int16_t h, int16_t tag );
+void cmd_text( int16_t x, int16_t y, int16_t font, uint16_t option, const char* text );
+void cmd_gauge( uint16_t x, uint16_t y, uint16_t r, uint16_t flat, uint16_t large, uint16_t small, uint16_t pointer, uint16_t max_pointer );
 
+
+
+
+/*****************************************************************************/
+/*************************** E X T E R N S ***********************************/
+/*****************************************************************************/
+extern SPI_HandleTypeDef hspi1;
+extern unsigned int cmdOffset;
 
 #endif  //FT800_h
 /** EOF FT800.h ********************************************************/

@@ -905,17 +905,16 @@ ARM Macro Assembler    Page 14
               00000000 
 Command Line: --debug --xref --cpu=Cortex-M4.fp --apcs=interwork --depend="pino
 ut configuration\startup_stm32f429xx.d" -o"pinout configuration\startup_stm32f4
-29xx.o" -I..\..\Inc -IE:\IBUS_v1\IBUS_v1\Projects\MDK-ARM\RTE -IC:\Keil_v5\ARM\
-PACK\Keil\STM32F4xx_DFP\2.2.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include -IC:\Ke
-il_v5\ARM\CMSIS\Include --predefine="__MICROLIB SETA 1" --predefine="STM32F429x
+29xx.o" -I..\..\Inc -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\3
+.20.4\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.6\Device\Inclu
+de --predefine="__MICROLIB SETA 1" --list=startup_stm32f429xx.lst ..\..\Drivers
 
 
 
 ARM Macro Assembler    Page 15 
 
 
-x SETA 1" --list=startup_stm32f429xx.lst ..\..\Drivers\CMSIS\Device\ST\STM32F4x
-x\Source\Templates\arm\startup_stm32f429xx.s
+\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f429xx.s
 
 
 
@@ -2447,4 +2446,4 @@ tes\arm\startup_stm32f429xx.s
 tes\arm\startup_stm32f429xx.s
 Comment: __main used once
 2 symbols
-452 symbols in table
+451 symbols in table

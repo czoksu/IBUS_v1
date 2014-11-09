@@ -1,5 +1,5 @@
 pinout configuration\syscall.o: ..\..\Middlewares\Third_Party\FatFs\src\option\syscall.c
-pinout configuration\syscall.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+pinout configuration\syscall.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdlib.h
 pinout configuration\syscall.o: ..\..\Middlewares\Third_Party\FatFs\src\option\../ff.h
 pinout configuration\syscall.o: ..\..\Middlewares\Third_Party\FatFs\src\option\../integer.h
 pinout configuration\syscall.o: ..\..\Inc\ffconf.h
@@ -10,7 +10,7 @@ pinout configuration\syscall.o: ..\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx
 pinout configuration\syscall.o: ..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 pinout configuration\syscall.o: ..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f429xx.h
 pinout configuration\syscall.o: ..\..\Drivers\CMSIS\Include\core_cm4.h
-pinout configuration\syscall.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+pinout configuration\syscall.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdint.h
 pinout configuration\syscall.o: ..\..\Drivers\CMSIS\Include\core_cmInstr.h
 pinout configuration\syscall.o: ..\..\Drivers\CMSIS\Include\core_cmFunc.h
 pinout configuration\syscall.o: ..\..\Drivers\CMSIS\Include\core_cm4_simd.h

@@ -4,6 +4,7 @@
     "coprocessor": [
         "COLOR_RGB(255, 255, 255)",
         "CLEAR(1, 1, 1)",
+        "CMD_TEXT(243, 230, 28, OPT_CENTER, \"RCV!\")",
         "CMD_GAUGE(114, 142, 60, OPT_FLAT, 10, 2, 0, 250)",
         "CMD_GAUGE(357, 142, 60, OPT_FLAT, 8, 2, 0, 7000)",
         "CMD_TEXT(240, 22, 28, OPT_CENTER, \"I-BUS MONITOR\")",
