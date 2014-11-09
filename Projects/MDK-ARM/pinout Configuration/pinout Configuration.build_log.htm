@@ -17,58 +17,58 @@ Library Manager: ArmAr.exe V5.05 (build 41)
 Hex Converter:   FromElf.exe V5.05 (build 41)
 CPU DLL:         SARMCM3.DLL V5.12.0.0
 Dialog DLL:      DCM.DLL V1.13.0.0
-    Target DLL: STLink\ST-LINKIII-KEIL_SWO.dll
+Target DLL:      UL2CM3.DLL V1.153.0.0
 Dialog DLL:      TCM.DLL V1.14.2.0
  
 <h2>Project:</h2>
-E:\IBUS_v1\IBUS_v1\Projects\MDK-ARM\pinout.uvproj
-Project File Date:  11/08/2014
+E:\IBUS_v1\IBUS_v1\Projects\MDK-ARM\pinout.uvprojx
+Project File Date:  11/09/2014
 
 <h2>Output:</h2>
 Build target 'pinout Configuration'
 compiling main.c...
-..\..\Src\main.c(860): warning:  #223-D: function "strlen" declared implicitly
-                for(i=0; i<strlen(s); i++) {
-..\..\Src\main.c(914): warning:  #223-D: function "strlen" declared implicitly
-                for(i=0; i<strlen(s); i++) {
-..\..\Src\main.c(979): warning:  #223-D: function "strlen" declared implicitly
-                for(i=0; i<strlen(s); i++) {
-..\..\Src\main.c: 3 warnings, 0 errors
 linking...
-<<<<<<< HEAD
-Program Size: Code=11776 RO-data=476 RW-data=140 ZI-data=1436  
-"pinout Configuration\pinout Configuration.axf" - 0 Error(s), 3 Warning(s).
-</pre>
-</body>
-</html>
-ings, 1 error
-"pinout Configuration\pinout Configuration.axf" - 1 Error(s), 3 Warning(s).
-Target not created.
-=======
-Program Size: Code=12160 RO-data=476 RW-data=128 ZI-data=1432  
+Program Size: Code=13048 RO-data=476 RW-data=128 ZI-data=1432  
+FromELF: creating hex file...
 "pinout Configuration\pinout Configuration.axf" - 0 Error(s), 0 Warning(s).
-Load "pinout Configuration\\pinout Configuration.axf" 
-Erase Done.
-Programming Done.
-Verify OK.
-Application running ...
+
+<h2>Collection of Component include folders:</h2>
+  E:\IBUS_v1\IBUS_v1\Projects\MDK-ARM\RTE
+  C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.2.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+
+<h2>Collection of Component Files used:</h2>
 </pre>
 </body>
 </html>
-"pinout Configuration\\pinout Configuration.axf" 
-Erase Done.
-Programming Done.
-Verify OK.
-Application running ...
-Load "pinout Configuration\\pinout Configuration.axf" 
-Erase Done.
-Programming Done.
-Verify OK.
-Application running ...
- 
-..\..\Src\main.c: 1 warning, 0 errors
-"..\..\Src\main.c" - 0 Error(s), 1 Warning(s).
-ing stm32f4xx_hal_sd.c...
+ice\ST\STM32F4xx\Include
+
+<h2>Collection of Component Files used:</h2>
+Target not created.
+6_t Size)
+..\..\Src\main.c(1093): error:  #254: type name is not allowed
+        HAL_UART_Receive_IT(&huart1, uint8_t *pData, uint16_t Size)
+..\..\Src\main.c(1093): error:  #18: expected a ")"
+        HAL_UART_Receive_IT(&huart1, uint8_t *pData, uint16_t Size)
+..\..\Src\main.c(1095): error:  #65: expected a ";"
+    HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
+..\..\Src\main.c: 2 warnings, 5 errors
+compiling stm32f4xx_hal_msp.c...
+compiling stm32f4xx_it.c...
+compiling system_stm32f4xx.c...
+compiling stm32f4xx_hal.c...
+compiling stm32f4xx_hal_cortex.c...
+compiling stm32f4xx_hal_dma.c...
+compiling stm32f4xx_hal_dma_ex.c...
+compiling stm32f4xx_hal_flash.c...
+compiling stm32f4xx_hal_flash_ex.c...
+compiling stm32f4xx_hal_flash_ramfunc.c...
+compiling stm32f4xx_hal_gpio.c...
+compiling stm32f4xx_hal_iwdg.c...
+compiling stm32f4xx_hal_pwr.c...
+compiling stm32f4xx_hal_pwr_ex.c...
+compiling stm32f4xx_hal_rcc.c...
+compiling stm32f4xx_hal_rcc_ex.c...
+compiling stm32f4xx_hal_sd.c...
 compiling stm32f4xx_hal_sdram.c...
 compiling stm32f4xx_hal_spi.c...
 compiling stm32f4xx_hal_uart.c...
@@ -80,12 +80,11 @@ compiling ff.c...
 compiling ff_gen_drv.c...
 compiling ccsbcs.c...
 compiling syscall.c...
-linking...
-Program Size: Code=12400 RO-data=476 RW-data=140 ZI-data=1436  
-"pinout Configuration\pinout Configuration.axf" - 0 Error(s), 0 Warning(s).
-Load "pinout Configuration\\pinout Configuration.axf" 
-Erase Done.
-Programming Done.
-Verify OK.
-Application running ...
->>>>>>> origin/gauges
+"pinout Configuration\pinout Configuration.axf" - 5 Error(s), 2 Warning(s).
+
+<h2>Collection of Component include folders:</h2>
+  E:\IBUS_v1\IBUS_v1\Projects\MDK-ARM\RTE
+  C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.2.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+
+<h2>Collection of Component Files used:</h2>
+Target not created.

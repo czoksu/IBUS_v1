@@ -38,6 +38,8 @@
 #include "ff_gen_drv.h"
 #include "sd_diskio.h" /* defines SD_Driver as external */
 #include "string.h"
+#include "stm32f4xx_hal_uart.h"
+#include "IBUS.h"
 
 /* Private variables ---------------------------------------------------------*/
 IWDG_HandleTypeDef hiwdg;
@@ -107,25 +109,10 @@ unsigned long point_x = (96 * 16);											// Define a default point x-locatio
 unsigned long point_y = (136 * 16);											// Define a default point y-location (1/16 anti-aliased)
 unsigned long color;																		// Variable for chanign colors
 unsigned char ft800Gpio;																// Used for FT800 GPIO register
-
-// AN_312 Specific function prototypes - See full descriptions below
-static void ft800cmdWrite(unsigned char);
-static void ft800memWrite8(unsigned long, unsigned char);
-static void ft800memWrite16(unsigned long, unsigned int);
-static void ft800memWrite32(unsigned long, unsigned long);
-unsigned char ft800memRead8(unsigned long);
-unsigned int ft800memRead16(unsigned long);
-unsigned long ft800memRead32(unsigned long);
-unsigned int incCMDOffset(unsigned int, unsigned char);
-void cmd_button(int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char* s );
-void cmd_fgcolor(uint32_t c);
-void cmd_bgcolor(uint32_t c);
-void cmd_keys( int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char* s );
-void cmd_slider( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t options, uint16_t val, uint16_t range );
-void cmd_toggle( int16_t x, int16_t y, int16_t w, int16_t font, uint16_t options, uint16_t state, const char* s );
-void cmd_number( int16_t x, int16_t y, int16_t font, uint16_t options, int32_t n );
-void cmd_calibrate( uint32_t result );
-void cmd_track( int16_t x, int16_t y, int16_t w, int16_t h, int16_t tag );
+uint8_t speed = 0;
+int revs = 900;
+uint8_t IBUSByte = 0;
+uint8_t byteCounter = 0;
 
 
 
@@ -145,6 +132,25 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+void ft800cmdWrite(unsigned char);
+void ft800memWrite8(unsigned long, unsigned char);
+void ft800memWrite16(unsigned long, unsigned int);
+void ft800memWrite32(unsigned long, unsigned long);
+unsigned char ft800memRead8(unsigned long);
+unsigned int ft800memRead16(unsigned long);
+unsigned long ft800memRead32(unsigned long);
+unsigned int incCMDOffset(unsigned int, unsigned char);
+void cmd_button(int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char* s );
+void cmd_fgcolor(uint32_t c);
+void cmd_bgcolor(uint32_t c);
+void cmd_keys( int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char* s );
+void cmd_slider( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t options, uint16_t val, uint16_t range );
+void cmd_toggle( int16_t x, int16_t y, int16_t w, int16_t font, uint16_t options, uint16_t state, const char* s );
+void cmd_number( int16_t x, int16_t y, int16_t font, uint16_t options, int32_t n );
+void cmd_calibrate( uint32_t result );
+void cmd_track( int16_t x, int16_t y, int16_t w, int16_t h, int16_t tag );
+void cmd_text( int16_t x, int16_t y, int16_t font, uint16_t option, const char* text );
+void cmd_gauge( uint16_t x, uint16_t y, uint16_t r, uint16_t flat, uint16_t large, uint16_t small, uint16_t pointer, uint16_t max_pointer );
 
   /* USER CODE END 1 */
 
@@ -158,8 +164,11 @@ int main(void)
 
   /* System interrupt init*/
   /* Sets the priority grouping field */
-  HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_0);
+
+	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_0);
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(USART1_IRQn);	
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
@@ -328,9 +337,9 @@ if (ft800memRead8(REG_ID) != 0x7C)											// Read ID register - is it 0x7C?
 																												// Attributes are the color, stencil and tag buffers
 		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
 
-		drawGauge(114, 142, 60, OPT_FLAT, 10, 2, speed, 250);
-		drawGauge(357, 142, 60, OPT_FLAT, 8, 2, revs, 7000);
-		drawText(240, 22, 28, OPT_CENTER, "IBUSMONITOR");
+		cmd_gauge(114, 142, 60, OPT_FLAT, 10, 2, speed, 250);
+		cmd_gauge(357, 142, 60, OPT_FLAT, 8, 2, revs, 7000);
+		cmd_text(240, 22, 28, OPT_CENTER, "IBUSMONITOR");
 		
 		ft800memWrite32(RAM_CMD + cmdOffset, (DL_DISPLAY));		// Instruct the graphics processor to show the list
 		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
@@ -1023,11 +1032,72 @@ void cmd_track( int16_t x, int16_t y, int16_t w, int16_t h, int16_t tag ) {
 		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
     
 }
+void cmd_gauge(uint16_t x, uint16_t y, uint16_t r, uint16_t flat, uint16_t large, uint16_t small, uint16_t pointer, uint16_t max_pointer) {
+		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_GAUGE));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (x));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (y));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (r));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (flat));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (large));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (small));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (pointer));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite32(RAM_CMD + cmdOffset, (max_pointer));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+}
 
+void cmd_text(int16_t x, int16_t y, int16_t font, uint16_t option, const char* text) {
+		
+		int i;	
+	
+		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_TEXT));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, (x));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, (y));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, (font));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		ft800memWrite16(RAM_CMD + cmdOffset, (option));		// Instruct the graphics processor to show the list
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+		
+		for( i=0; i <= strlen(text); i++) {
+				ft800memWrite16(RAM_CMD + cmdOffset, text[i]);		// Instruct the graphics processor to show the list
+				cmdOffset = incCMDOffset(cmdOffset, sizeof(text[i]));						// Update the command pointer
+		}
+			
+}
 
+void USART1_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART1_IRQn 0 */
+	HAL_UART_Receive_IT(&huart1, &IBUSByte, 1);
+  /* USER CODE END USART1_IRQn 0 */
+  HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
+  HAL_UART_IRQHandler(&huart1);
+  /* USER CODE BEGIN USART1_IRQn 1 */
 
-
-
+  /* USER CODE END USART1_IRQn 1 */
+}
 
 /* USER CODE END 4 */
 
