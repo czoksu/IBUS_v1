@@ -45,13 +45,11 @@
 extern uint8_t dataReceived;
 extern UART_HandleTypeDef huart1;
 extern uint8_t* rcvMsg;
-extern uint8_t IBUSbuffer[24];
-extern uint8_t IBUSByte;
 extern uint8_t byteCounter;
-extern uint8_t IBUSBuffer[24];
+extern unsigned short IBUSBuffer[32];
 extern uint8_t dataReceived;
 extern uint8_t msgLength;
-
+extern uint8_t data;
 
 
 /**
@@ -65,31 +63,21 @@ void SysTick_Handler(void)
 
 void USART1_IRQHandler(void)
 {
-  dataReceived = 1;
-	HAL_UART_Transmit(&huart1, rcvMsg, 8, 10);
-	/* USER CODE BEGIN USART1_IRQn 0 */
-	if(__HAL_UART_GET_IT_SOURCE(&huart1, UART_IT_RXNE)) {
-		
+  if (USART1->SR & UART_FLAG_RXNE) {                  // read interrupt
 		dataReceived = 1;
-		HAL_UART_Receive(&huart1, &IBUSBuffer[0], 1, 10);
-		byteCounter++;
-		HAL_UART_Receive(&huart1, &IBUSBuffer[1], 1, 10);
-		byteCounter++;
-		msgLength = IBUSBuffer[1];
-		
-		while(msgLength) {
-			HAL_UART_Receive_IT(&huart1, &IBUSBuffer[byteCounter], 1);
+		if(byteCounter < (2 + IBUSBuffer[1])) {
+			IBUSBuffer[byteCounter] = USART1->DR;
 			byteCounter++;
-			msgLength--;
+			if(byteCounter == (IBUSBuffer[1] + 2)) {
+				msgLength = byteCounter;
+				data = msgLength;
+				byteCounter = 0;
+			}
 		}
-		
 	}
-  /* USER CODE END USART1_IRQn 0 */
+
   HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
   HAL_UART_IRQHandler(&huart1);
-  /* USER CODE BEGIN USART1_IRQn 1 */
-
-  /* USER CODE END USART1_IRQn 1 */
 }
 
 

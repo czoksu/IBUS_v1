@@ -7296,7 +7296,7 @@ USB_OTG_HostChannelTypeDef;
 #define  USART_CR1_IDLEIE                    ((uint32_t)0x0010)            /*!<IDLE Interrupt Enable                  */
 #define  USART_CR1_RXNEIE                    ((uint32_t)0x0020)            /*!<RXNE Interrupt Enable                  */
 #define  USART_CR1_TCIE                      ((uint32_t)0x0040)            /*!<Transmission Complete Interrupt Enable */
-#define  USART_CR1_TXEIE                     ((uint32_t)0x0080)            /*!<PE Interrupt Enable                    */
+#define  USART_CR1_TXEIE                     ((uint32_t)0x0080)            /*!<TXNE Interrupt Enable                    */
 #define  USART_CR1_PEIE                      ((uint32_t)0x0100)            /*!<PE Interrupt Enable                    */
 #define  USART_CR1_PS                        ((uint32_t)0x0200)            /*!<Parity Selection                       */
 #define  USART_CR1_PCE                       ((uint32_t)0x0400)            /*!<Parity Control Enable                  */

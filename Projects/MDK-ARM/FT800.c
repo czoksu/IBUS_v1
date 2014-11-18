@@ -434,9 +434,10 @@ void cmd_track( int16_t x, int16_t y, int16_t w, int16_t h, int16_t tag ) {
 		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
    
 		ft800memWrite16(RAM_CMD +cmdOffset, tag);
-		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
-    
+		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer    
+
 }
+
 void cmd_gauge(uint16_t x, uint16_t y, uint16_t r, uint16_t flat, uint16_t large, uint16_t small, uint16_t pointer, uint16_t max_pointer) {
 		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_GAUGE));		// Instruct the graphics processor to show the list
 		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
@@ -464,12 +465,15 @@ void cmd_gauge(uint16_t x, uint16_t y, uint16_t r, uint16_t flat, uint16_t large
 		
 		ft800memWrite32(RAM_CMD + cmdOffset, (max_pointer));		// Instruct the graphics processor to show the list
 		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
+
 }
 
 void cmd_text(int16_t x, int16_t y, int16_t font, uint16_t option, const char* text) {
 		
-		int i;	
-	
+		uint32_t i, Count;	
+		uint32_t NBytes = strlen((const char *)text) + 1;
+		NBytes = (NBytes + 3)&(~3);
+		
 		ft800memWrite32(RAM_CMD + cmdOffset, (CMD_TEXT));		// Instruct the graphics processor to show the list
 		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
 		
@@ -485,9 +489,17 @@ void cmd_text(int16_t x, int16_t y, int16_t font, uint16_t option, const char* t
 		ft800memWrite16(RAM_CMD + cmdOffset, (option));		// Instruct the graphics processor to show the list
 		cmdOffset = incCMDOffset(cmdOffset, 2);								// Update the command pointer
 		
-		for( i=0; i <= strlen(text); i++) {
-				ft800memWrite16(RAM_CMD + cmdOffset, text[i]);		// Instruct the graphics processor to show the list
-				cmdOffset = incCMDOffset(cmdOffset, sizeof(text[i]));						// Update the command pointer
-		}
+		while(NBytes) {
+			Count = NBytes;
 			
+			for(i = 0;i<Count;i++) {
+				ft800memWrite8(RAM_CMD + cmdOffset, *text++);
+				cmdOffset = incCMDOffset(cmdOffset, 1);
+			}
+			
+			NBytes -= Count;
+			
+			
+		}
 }
+

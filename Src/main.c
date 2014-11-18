@@ -40,6 +40,7 @@
 #include "string.h"
 #include "stm32f4xx_hal_uart.h"
 #include "IBUS.h"
+#include "stdio.h"
 
 /* Private variables ---------------------------------------------------------*/
 IWDG_HandleTypeDef hiwdg;
@@ -97,18 +98,16 @@ unsigned long point_x = (96 * 16);											// Define a default point x-locatio
 unsigned long point_y = (136 * 16);											// Define a default point y-location (1/16 anti-aliased)
 unsigned long color;																		// Variable for chanign colors
 unsigned char ft800Gpio;																// Used for FT800 GPIO register
+
 uint8_t speed = 0;
-int revs = 900;
-uint8_t IBUSByte = 0;
 uint8_t byteCounter = 0;
-uint8_t IBUSBuffer[24];
+unsigned short IBUSBuffer[32];
 uint8_t dataReceived = 0;
 uint8_t msgLength = 0;
-uint8_t* speedMsg = "OVERSPEED";
-uint8_t* rcvMsg = "RECEIVED";
-uint8_t CR = 0x0D;
-uint8_t LF = 0x0A;
-
+uint8_t tabliczka[7] = {0x80,0x05,0xBF,0x18,0x00,0x07,0x25};
+int i;
+char msgChar[6] = "";
+uint8_t data = 3;
 
 /* USER CODE END 0 */
 
@@ -124,9 +123,9 @@ static void MX_USB_OTG_HS_USB_Init(void);
 
 int main(void)
 {
-
+	
   /* USER CODE BEGIN 1 */
-
+	IBUSBuffer[1] = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -143,7 +142,6 @@ int main(void)
 	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_0);
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 	HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(USART1_IRQn);	
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
@@ -152,6 +150,7 @@ int main(void)
   MX_SDIO_SD_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
+	HAL_NVIC_EnableIRQ(USART1_IRQn);
   MX_USB_OTG_HS_USB_Init();
 
   /* USER CODE BEGIN 2 */
@@ -286,6 +285,8 @@ if (ft800memRead8(REG_ID) != 0x7C)											// Read ID register - is it 0x7C?
   /* Infinite loop */
   while (1)
   {
+		
+		
 		// Wait for graphics processor to complete executing the current command list
 		// This happens when REG_CMD_READ matches REG_CMD_WRITE, indicating that all commands
 		// have been executed.  The next commands get executed when REG_CMD_WRITE is updated again...
@@ -313,11 +314,42 @@ if (ft800memRead8(REG_ID) != 0x7C)											// Read ID register - is it 0x7C?
 		cmdOffset = incCMDOffset(cmdOffset, 4);								// Update the command pointer
 
 		cmd_gauge(114, 142, 60, OPT_FLAT, 10, 2, speed, 250);
-		cmd_gauge(357, 142, 60, OPT_FLAT, 8, 2, revs, 7000);
-		cmd_text(240, 22, 28, OPT_CENTER, "IBUSMONITOR");
+		cmd_text(240, 22, 28, OPT_CENTER, "I-BUS MONITOR");
+		cmd_text(114, 223, 26, OPT_CENTER, "PREDKOSC");
+		
+		cmd_text(309, 130, 18, OPT_CENTER, "TRESC    :");
+		while(data < msgLength-1) {
+			sprintf(msgChar, "%.2xh", IBUSBuffer[data]);
+			cmd_text(380, 130+(data-3)*15, 18, OPT_CENTER, msgChar);
+			data++;
+		}
+		data = 3;
+		
+		
+		sprintf(msgChar, "%.2xh", IBUSBuffer[0]);
+		cmd_text(309, 70, 18, OPT_CENTER, "NADAWCA  :");
+		cmd_text(380, 70, 18, OPT_CENTER, msgChar);
+		
+		sprintf(msgChar, "%.2xh", IBUSBuffer[1]);
+		cmd_text(309, 85, 18, OPT_CENTER, "DLUGOSC  :");
+		cmd_text(380, 85, 18, OPT_CENTER, msgChar);
+		
+		sprintf(msgChar, "%.2xh", IBUSBuffer[2]);
+		cmd_text(309, 100, 18, OPT_CENTER, "ODBIORCA :");
+		cmd_text(380, 100, 18, OPT_CENTER, msgChar);
+		
+		sprintf(msgChar, "%.2xh", IBUSBuffer[msgLength-1]);
+		cmd_text(309, 235, 18, OPT_CENTER, "CHECKSUM :");
+		cmd_text(380, 235, 18, OPT_CENTER, msgChar);
+		
+		sprintf(msgChar, "%.2xh", msgLength);
+		cmd_text(309, 250, 18, OPT_CENTER, "msgLength :");
+		cmd_text(380, 250, 18, OPT_CENTER, msgChar);
+
 		
 		if(dataReceived) {
 			cmd_text(243, 230, 28, OPT_CENTER, "RCV!");
+			dataReceived = 0;
 		}
 		
 		
@@ -331,19 +363,13 @@ if (ft800memRead8(REG_ID) != 0x7C)											// Read ID register - is it 0x7C?
 
 		ft800memWrite16(REG_CMD_WRITE, (cmdOffset));					// Update the ring buffer pointer so the graphics processor starts executing
 		
-		revs += 100;
-		HAL_Delay(50);	
+
+	
 		if(speed < 250) {
-			
-			speed++;
-			revs -= 100;
+			speed += 1;
 		}
 		else {
 			speed = 0;
-			HAL_UART_Transmit(&huart1, speedMsg, 9, 10);
-			HAL_UART_Transmit(&huart1, &LF, 1, 10);
-			HAL_UART_Transmit(&huart1, &CR, 1, 10);
-
 		}
 
  // End of loop()
@@ -355,53 +381,53 @@ if (ft800memRead8(REG_ID) != 0x7C)											// Read ID register - is it 0x7C?
 
 /** System Clock Configuration
 */
-//void SystemClock_Config(void)
-//{
-//  RCC_ClkInitTypeDef RCC_ClkInitStruct;
-//  RCC_OscInitTypeDef RCC_OscInitStruct;
-//  
-//  /* Enable Power Control clock */
-//  __PWR_CLK_ENABLE();
-//  
-//  /* The voltage scaling allows optimizing the power consumption when the device is 
-//     clocked below the maximum system frequency, to update the voltage scaling value 
-//     regarding system frequency refer to product datasheet.  */
-//  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-//  
-//  /* Enable HSE Oscillator and activate PLL with HSE as source */
-//  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-//  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-//  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-//  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-//  RCC_OscInitStruct.PLL.PLLM = 8;
-//  RCC_OscInitStruct.PLL.PLLN = 360;
-//  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-//  RCC_OscInitStruct.PLL.PLLQ = 8;
-//  HAL_RCC_OscConfig(&RCC_OscInitStruct);
-//  
-//  /* Activate the Over-Drive mode */
-//  HAL_PWREx_ActivateOverDrive();
-//  
-//  /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2 
-//  clocks dividers */
-//  RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
-//  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-//  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-//  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;  
-//  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;  
-//  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
-//}
-
 void SystemClock_Config(void)
 {
+  RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_OscInitTypeDef RCC_OscInitStruct;
-
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = 6;
+  
+  /* Enable Power Control clock */
+  __PWR_CLK_ENABLE();
+  
+  /* The voltage scaling allows optimizing the power consumption when the device is 
+     clocked below the maximum system frequency, to update the voltage scaling value 
+     regarding system frequency refer to product datasheet.  */
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+  
+  /* Enable HSE Oscillator and activate PLL with HSE as source */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 192;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV6;
+  RCC_OscInitStruct.PLL.PLLQ = 4;
   HAL_RCC_OscConfig(&RCC_OscInitStruct);
-
+  
+  /* Activate the Over-Drive mode */
+  HAL_PWREx_ActivateOverDrive();
+  
+  /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2 
+  clocks dividers */
+  RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;  
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;  
+  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 }
+
+//void SystemClock_Config(void)
+//{
+//  RCC_OscInitTypeDef RCC_OscInitStruct;
+
+//  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+//  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+//  RCC_OscInitStruct.HSICalibrationValue = 6;
+//  HAL_RCC_OscConfig(&RCC_OscInitStruct);
+
+//}
 
 /* IWDG init function */
 void MX_IWDG_Init(void)
@@ -463,6 +489,8 @@ void MX_USART1_UART_Init(void)
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   HAL_UART_Init(&huart1);
+	USART1->CR1 |= (USART_CR1_RXNEIE);
+
 
 }
 
@@ -535,12 +563,12 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-//  /*Configure GPIO pin : PC5 */
-//  GPIO_InitStruct.Pin = GPIO_PIN_5;
-//  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-//  GPIO_InitStruct.Pull = GPIO_NOPULL;
-//  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-//  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  /*Configure GPIO pin : PG13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
   /*Configure GPIO pins :  PB0 PB1 */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
@@ -578,8 +606,6 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
-
 
 
 /* USER CODE END 4 */

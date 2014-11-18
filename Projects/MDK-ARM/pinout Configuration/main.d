@@ -39,4 +39,5 @@ pinout configuration\main.o: ..\..\Middlewares\Third_Party\FatFs\src\diskio.h
 pinout configuration\main.o: ..\..\Middlewares\Third_Party\FatFs\src\drivers\sd_diskio.h
 pinout configuration\main.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\string.h
 pinout configuration\main.o: ..\..\Inc\IBUS.h
+pinout configuration\main.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdio.h
 pinout configuration\main.o: ..\..\Inc\FT800.h

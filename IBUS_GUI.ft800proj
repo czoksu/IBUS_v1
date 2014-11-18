@@ -1,24 +1,40 @@
 {
     "content": [
+        {
+            "converter": "Image",
+            "dataCompressed": true,
+            "dataEmbedded": true,
+            "destName": "ciuchcia80x80",
+            "imageFormat": 0,
+            "memoryAddress": 0,
+            "memoryLoaded": true,
+            "sourcePath": "C:/Users/Czoks/Pictures/C++ obrazy/ciuchcia80x80.png"
+        }
     ],
     "coprocessor": [
+        "BITMAP_HANDLE(0)",
+        "BITMAP_SOURCE(0)",
+        "BITMAP_LAYOUT(ARGB1555, 160, 80)",
+        "BITMAP_SIZE(NEAREST, BORDER, BORDER, 80, 80)",
         "COLOR_RGB(255, 255, 255)",
         "CLEAR(1, 1, 1)",
-        "CMD_TEXT(243, 230, 28, OPT_CENTER, \"RCV!\")",
+        "CMD_TEXT(309, 130, 18, OPT_CENTER, \"TRESC    :\")",
+        "CMD_TEXT(309, 235, 18, OPT_CENTER, \"CHECKSUM :\")",
+        "CMD_TEXT(309, 70, 18, OPT_CENTER, \"NADAWCA  :\")",
+        "CMD_TEXT(309, 85, 18, OPT_CENTER, \"DLUGOSC  :\")",
+        "CMD_TEXT(309, 100, 18, OPT_CENTER, \"ODBIORCA :\")",
+        "CMD_TEXT(380, 70, 18, OPT_CENTER, \"0x80\")",
+        "CMD_TEXT(380, 85, 18, OPT_CENTER, \"0x05\")",
+        "CMD_TEXT(380, 100, 18, OPT_CENTER, \"0xBF\")",
+        "CMD_TEXT(380, 130, 18, OPT_CENTER, \"0x18\")",
+        "CMD_TEXT(380, 145, 18, OPT_CENTER, \"0x00\")",
+        "CMD_TEXT(380, 160, 18, OPT_CENTER, \"0x07\")",
+        "CMD_TEXT(380, 235, 18, OPT_CENTER, \"0x25\")",
+        "",
         "CMD_GAUGE(114, 142, 60, OPT_FLAT, 10, 2, 0, 250)",
-        "CMD_GAUGE(357, 142, 60, OPT_FLAT, 8, 2, 0, 7000)",
+        "CMD_TEXT(114, 223, 26, OPT_CENTER, \"PREDKOSC\")",
         "CMD_TEXT(240, 22, 28, OPT_CENTER, \"I-BUS MONITOR\")",
-        "CMD_TEXT(65, 191, 20, OPT_CENTER, \"0\")",
-        "CMD_TEXT(46, 164, 20, OPT_CENTER, \"20\")",
-        "CMD_TEXT(45, 132, 20, OPT_CENTER, \"40\")",
-        "CMD_TEXT(56, 101, 20, OPT_CENTER, \"60\")",
-        "CMD_TEXT(87, 79, 20, OPT_CENTER, \"80\")",
-        "CMD_TEXT(116, 73, 20, OPT_CENTER, \"100\")",
-        "CMD_TEXT(148, 82, 20, OPT_CENTER, \"120\")",
-        "CMD_TEXT(173, 107, 20, OPT_CENTER, \"140\")",
-        "CMD_TEXT(183, 135, 20, OPT_CENTER, \"160\")",
-        "CMD_TEXT(183, 167, 20, OPT_CENTER, \"180\")",
-        "CMD_TEXT(164, 191, 20, OPT_CENTER, \"200\")"
+        ""
     ],
     "displayList": [
         ""
